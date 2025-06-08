@@ -1,9 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Plus, SquarePen } from "lucide-react";
-import { useNavigation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Purchase = () => {
   const navigate = useNavigate();
+  const [invoices, setInvoices] = useState([]);
+  useEffect(() => {
+    axios
+      .get("https://localhost:7239/api/v1/Invoice")
+      .then((response) => {
+        console.log(response);
+        setInvoices(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   const gotoDetail = () => {
     navigate("/detail");
   };
@@ -29,28 +43,32 @@ const Purchase = () => {
             </tr>
           </thead>
           <tbody className='text-lg'>
-            {/* row 1 */}
-            <tr className='border border-gray-300'>
-              <th className='border-r border-gray-300'>1</th>
-              <td className='border-r border-gray-300'>Cy Ganderton</td>
-              <td className='border-r border-gray-300 text-end'>5</td>
-              <td className='border-r border-gray-300 text-end'>Blue</td>
-              {/* Last td no right border */}
-            </tr>
-            {/* row 2 */}
-            <tr className='border border-gray-300'>
+
+            {invoices.length > 0 &&
+              invoices.map((item) => (
+                <tr className='border border-gray-300'>
+                  <th className='border-r border-gray-300'>
+                    {item.invoiceDate}
+                  </th>
+                  <td className='border-r border-gray-300'>{item.invoiceNo}</td>
+                  <td className='border-r border-gray-300 text-end'>{item.totalQty}</td>
+                  <td className='border-r border-gray-300 text-end'>{item.totalAmount}</td>
+                </tr>
+              ))}
+
+            {/* <tr className='border border-gray-300'>
               <th className='border-r border-gray-300'>2</th>
               <td className='border-r border-gray-300'>Hart Hagerty</td>
               <td className='border-r border-gray-300 text-end'>15</td>
               <td className='border-r border-gray-300 text-end'>Purple</td>
             </tr>
-            {/* row 3 */}
+
             <tr className='border border-gray-300'>
               <th className='border-r border-gray-300'>3</th>
               <td className='border-r border-gray-300'>3</td>
               <td className='border-r border-gray-300 text-end'>6</td>
               <td className='border-r border-gray-300 text-end'>Red</td>
-            </tr>
+            </tr> */}
             <tr className='border border-gray-300 bg-gray-300'>
               <th className='border-r border-gray-300'>
                 <div
