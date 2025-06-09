@@ -4,9 +4,10 @@ import moment from "moment";
 import { Save } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const PurchaseDetail = () => {
+const UpdatePurchaseDetail = () => {
+  const { invoiceId } = useParams();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [data, setData] = useState({
@@ -14,6 +15,27 @@ const PurchaseDetail = () => {
     invoiceDate: new Date(),
   });
   const [invoiceItems, setInvoiceItems] = useState([]);
+
+  useEffect(() => {
+    onLoadInvoice();
+  }, []);
+
+  const onLoadInvoice = async () => {
+    try {
+      const response = await axios.get(
+        `https://localhost:7239/api/v1/Invoice/${invoiceId}`
+      );
+      if (response.status === 200) {
+        setData({
+          invoiceNo: response.data.invoiceNo,
+          invoiceDate: response.data.invoiceDate,
+        });
+        setInvoiceItems(response.data.invoicedetails);
+      }
+    } catch (error) {
+      console.log("err", error);
+    }
+  };
 
   const onSaveInvoice = async (e) => {
     e.preventDefault();
@@ -29,8 +51,8 @@ const PurchaseDetail = () => {
     };
 
     try {
-      const response = await axios.post(
-        "https://localhost:7239/api/v1/Invoice",
+      const response = await axios.put(
+        `https://localhost:7239/api/v1/Invoice/${invoiceId}`,
         payload,
         {
           headers: {
@@ -39,7 +61,7 @@ const PurchaseDetail = () => {
         }
       );
       if (response.status === 200) {
-        toast.success(`Invoice created successfully!`, {
+        toast.success(`Invoice updated successfully!`, {
           position: "top-right",
         });
         navigate("/");
@@ -83,7 +105,6 @@ const PurchaseDetail = () => {
     );
   };
 
-  useEffect(() => console.log("hi", invoiceItems), [invoiceItems]);
   return (
     <div className='p-4 mt-2 ml-6'>
       <div className='w-1/3'>
@@ -130,6 +151,7 @@ const PurchaseDetail = () => {
           <Save size={25} />
         </button>
       </div>
+
       <div className='overflow-x-auto rounded-box border border-base-content/5 bg-base-100 mt-6'>
         <table className='table w-[1000px]'>
           {/* head */}
@@ -186,4 +208,4 @@ const PurchaseDetail = () => {
   );
 };
 
-export default PurchaseDetail;
+export default UpdatePurchaseDetail;

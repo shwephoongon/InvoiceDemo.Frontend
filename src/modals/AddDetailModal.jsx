@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const AddDetailModal = ({ isOpen, closeModal, addItem }) => {
   const [details, setDetails] = useState({
-    code: "",
+    stockCode: "",
     description: "",
     qty: null,
     price: null,
@@ -16,6 +16,12 @@ const AddDetailModal = ({ isOpen, closeModal, addItem }) => {
   const onConfirm = (e) => {
     e.preventDefault();
     addItem(details);
+    setDetails({
+      stockCode: "",
+      description: "",
+      qty: null,
+      price: null,
+    });
   };
   return (
     <div>
@@ -27,17 +33,17 @@ const AddDetailModal = ({ isOpen, closeModal, addItem }) => {
       >
         <form>
           <div className='flex flex-row gap-12'>
-            <label>Code</label>
+            <div className='basis-1/4'>Code</div>
             <input
-              id='code'
+              id='stockCode'
               type='text'
               className='border-b-1 border-gray-900 text-lg focus:outline-none focus:ring-0 '
-              value={details.code}
+              value={details.stockCode}
               onChange={handleDetailsChange}
             />
           </div>
           <div className='flex flex-row gap-12'>
-            <label>Description</label>
+            <div className='basis-1/4'>Description</div>
             <input
               id='description'
               type='text'
@@ -47,7 +53,7 @@ const AddDetailModal = ({ isOpen, closeModal, addItem }) => {
             />
           </div>
           <div className='flex flex-row gap-12'>
-            <label>Qty</label>
+            <div className='basis-1/4'>Qty</div>
             <input
               id='qty'
               type='text'
@@ -57,7 +63,7 @@ const AddDetailModal = ({ isOpen, closeModal, addItem }) => {
             />
           </div>
           <div className='flex flex-row gap-12'>
-            <label>Price</label>
+            <div className='basis-1/4'>Price</div>
             <input
               id='price'
               type='text'
@@ -66,12 +72,15 @@ const AddDetailModal = ({ isOpen, closeModal, addItem }) => {
               onChange={handleDetailsChange}
             />
           </div>
-          <button
-            onClick={onConfirm}
-            className='bg-[#4B18D6] px-6 py-2 w-36 text-white mt-6 text-center text-lg '
-          >
-            Add Detail
-          </button>
+          <div className='flex justify-center mt-6'>
+            <button
+              onClick={onConfirm}
+              type='button'
+              className='bg-[#4B18D6] px-6 py-2 text-white text-lg rounded-md hover:bg-[#3a14aa] hover:scale-105 transition-all duration-200 shadow-md cursor-pointer'
+            >
+              Add Detail
+            </button>
+          </div>
         </form>
       </Modal>
     </div>

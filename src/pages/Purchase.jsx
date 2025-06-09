@@ -6,6 +6,7 @@ import axios from "axios";
 const Purchase = () => {
   const navigate = useNavigate();
   const [invoices, setInvoices] = useState([]);
+
   useEffect(() => {
     axios
       .get("https://localhost:7239/api/v1/Invoice")
@@ -21,11 +22,15 @@ const Purchase = () => {
   const gotoDetail = () => {
     navigate("/detail");
   };
+
+  const gotoUpdateDetail = (item) => {
+    navigate(`/update/${item.invoiceId}`);
+  };
+
   return (
-    <div className=''>
+    <div>
       <div className='overflow-x-auto rounded-box border border-gray-300 bg-base-100'>
         <table className='table'>
-          {/* head */}
           <thead className='bg-gray-400 text-white '>
             <tr>
               <th className='border-r-2 border-white text-xl text-center'>
@@ -43,45 +48,40 @@ const Purchase = () => {
             </tr>
           </thead>
           <tbody className='text-lg'>
-
             {invoices.length > 0 &&
               invoices.map((item) => (
-                <tr className='border border-gray-300'>
+                <tr
+                  className='borderborder-gray-300 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => gotoUpdateDetail(item)}
+                >
                   <th className='border-r border-gray-300'>
                     {item.invoiceDate}
                   </th>
                   <td className='border-r border-gray-300'>{item.invoiceNo}</td>
-                  <td className='border-r border-gray-300 text-end'>{item.totalQty}</td>
-                  <td className='border-r border-gray-300 text-end'>{item.totalAmount}</td>
+                  <td className='border-r border-gray-300 text-end'>
+                    {item.totalQty}
+                  </td>
+                  <td className='border-r border-gray-300 text-end'>
+                    {item.totalAmount}
+                  </td>
                 </tr>
               ))}
 
-            {/* <tr className='border border-gray-300'>
-              <th className='border-r border-gray-300'>2</th>
-              <td className='border-r border-gray-300'>Hart Hagerty</td>
-              <td className='border-r border-gray-300 text-end'>15</td>
-              <td className='border-r border-gray-300 text-end'>Purple</td>
-            </tr>
-
-            <tr className='border border-gray-300'>
-              <th className='border-r border-gray-300'>3</th>
-              <td className='border-r border-gray-300'>3</td>
-              <td className='border-r border-gray-300 text-end'>6</td>
-              <td className='border-r border-gray-300 text-end'>Red</td>
-            </tr> */}
-            <tr className='border border-gray-300 bg-gray-300'>
-              <th className='border-r border-gray-300'>
-                <div
-                  className='flex flex-col justify-center items-center'
+            <tr className='border border-gray-300 font-bold bg-gray-100'>
+              <td colSpan={2} className='border-r border-gray-300 text-left'>
+                <button
                   onClick={gotoDetail}
+                  className='bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500 hover:scale-105 transition-all duration-200 cursor-pointer shadow-md'
                 >
-                  <Plus size={35} strokeWidth={4} />
-                  <p className='text-white'>New</p>
-                </div>
-              </th>
-              <td className='border-r border-gray-300'></td>
-              <td className='border-r border-gray-300 text-end'>6</td>
-              <td className='border-r border-gray-300 text-end'>Red</td>
+                  + New
+                </button>
+              </td>
+              <td className='border-r border-gray-300 text-end'>
+                {invoices.reduce((sum, item) => sum + item.totalQty, 0)}
+              </td>
+              <td className='border-r border-gray-300 text-end'>
+                {invoices.reduce((sum, item) => sum + item.totalAmount, 0)}
+              </td>
             </tr>
           </tbody>
         </table>
