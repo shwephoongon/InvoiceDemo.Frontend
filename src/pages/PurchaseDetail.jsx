@@ -40,15 +40,20 @@ const PurchaseDetail = () => {
       );
       if (response.status === 200) {
         toast.success(`Invoice created successfully!`, {
-          position: "top-right",
+          position: "top-center",
         });
         navigate("/");
       }
     } catch (error) {
       console.log("err", error);
-      toast.error(error?.response?.data.message);
+      let err = error?.response?.data.message
+      if (err) {
+        toast.error(err);
+      } else {
+        toast.error('Something went wrong')
+      }
     }
-  };
+  }
 
   const closeModal = () => {
     setOpenModal(false);
@@ -83,7 +88,6 @@ const PurchaseDetail = () => {
     );
   };
 
-  useEffect(() => console.log("hi", invoiceItems), [invoiceItems]);
   return (
     <div className='p-4 mt-2 ml-6'>
       <div className='w-1/3'>

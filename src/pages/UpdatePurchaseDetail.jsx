@@ -62,13 +62,18 @@ const UpdatePurchaseDetail = () => {
       );
       if (response.status === 200) {
         toast.success(`Invoice updated successfully!`, {
-          position: "top-right",
+          position: "top-center",
         });
         navigate("/");
       }
     } catch (error) {
       console.log("err", error);
-      toast.error(error?.response?.data.message);
+      let err = error?.response?.data.message;
+      if (err) {
+        toast.error(err);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 

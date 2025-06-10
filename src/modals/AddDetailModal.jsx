@@ -1,5 +1,6 @@
 import Modal from "react-modal";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const AddDetailModal = ({ isOpen, closeModal, addItem }) => {
   const [details, setDetails] = useState({
@@ -15,7 +16,30 @@ const AddDetailModal = ({ isOpen, closeModal, addItem }) => {
 
   const onConfirm = (e) => {
     e.preventDefault();
-    addItem(details);
+    const { stockCode, description, qty, price } = details;
+    const numericQty = typeof qty === "number" ? qty : Number(qty);
+    const numericPrice = typeof price === "number" ? price : Number(price);
+
+    const isValid =
+      stockCode?.trim() &&
+      description?.trim() &&
+      !isNaN(numericQty) &&
+      numericQty > 0 &&
+      !isNaN(numericPrice) &&
+      numericPrice > 0;
+
+    if (!isValid) {
+      toast.error("Please fill in all fields with valid values.");
+      return;
+    }
+
+    const newItem = {
+      ...details,
+      qty: numericQty,
+      price: numericPrice,
+    };
+
+    addItem(newItem);
     setDetails({
       stockCode: "",
       description: "",
@@ -56,7 +80,7 @@ const AddDetailModal = ({ isOpen, closeModal, addItem }) => {
             <div className='basis-1/4'>Qty</div>
             <input
               id='qty'
-              type='text'
+              type='number'
               className='border-b-1 border-gray-900 text-lg focus:outline-none focus:ring-0 '
               value={details.qty}
               onChange={handleDetailsChange}
@@ -66,7 +90,7 @@ const AddDetailModal = ({ isOpen, closeModal, addItem }) => {
             <div className='basis-1/4'>Price</div>
             <input
               id='price'
-              type='text'
+              type='number'
               className='border-b-1 border-gray-900 text-lg focus:outline-none focus:ring-0 '
               value={details.price}
               onChange={handleDetailsChange}
